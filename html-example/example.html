@@ -1,0 +1,138 @@
+<html>
+	
+	<head>
+		<title>ChemJS Examples</title>
+		<script src='../js/lib/jquery-2.1.4.min.js' type='text/javascript'></script>
+		<script src='../js/dist/myjslab.js' type='text/javascript'></script>
+	</head>
+
+	<body>
+
+		<h1>ChemJS Example</h1>
+
+		<select id="elementSelector"></select>
+
+		<div style="border:solid black 1px; padding:10px; width: 20%; margin-top:40px;" id="elementData">
+			<p><strong>Element Data</strong></p>
+			<div>
+				<span>Atomic Number: </span><span id="elementDataAtomicNumber"></span><br/>
+				<span>Element Name: </span><span id="elementDataName"></span><br/>
+				<span>Element Symbol: </span><span id="elementDataSymbol"></span><br/>
+				<span>Atomic Weight: </span><span id="elementDataAtomicWeight"></span><br/>
+				<span>Period: </span><span id="elementDataPeriod"></span><br/>
+				<span>Group: </span><span id="elementDataGroup"></span><br/>
+				<span>Electron Configuration: </span><span id="elementDataElecConfig"></span><br/>
+			</div>
+		</div>
+
+		<script>
+			var elements = MyJSLab.library.getElementList('name');
+			for (var i = 0; i <= elements.length; i++) {
+				if(elements[i])
+					$('#elementSelector').append('<option value="'+elements[i].symbol+'">'+elements[i].name+'</option>');
+			};
+
+			$('#elementSelector').change(function(){
+				setData(this);
+			});
+
+			$('#elementSelector').change();
+
+			function setData(selection){
+				var elSymbol = $(selection).val();
+				var atom = MyJSLab.atom(elSymbol);
+				if(atom){
+					$('#elementDataAtomicNumber').html(atom.atomicNumber);
+					$('#elementDataName').html(atom.elementName);
+					$('#elementDataSymbol').html(atom.symbol);
+					$('#elementDataAtomicWeight').html(atom.atomicWeight);
+					$('#elementDataPeriod').html(atom.period);
+					$('#elementDataGroup').html(atom.group);
+					$('#elementDataElecConfig').html(atom.getElectronConfiguration());
+				}
+			}
+		</script>
+
+		<!-- Element Creation Example -->
+		<script>
+			/*var helium = new element({elementShort:'H'});
+			console.log(helium);*/
+		</script>
+
+		<!-- Atom Creation Example -->
+		<script>
+			
+			var myWorkspace = MyJSLab.workspace();
+			console.log('workspace',myWorkspace);
+
+			var helium = MyJSLab.atom('H');
+			var carbon = MyJSLab.atom('C');
+			console.log(helium);
+			console.log(carbon);
+		</script>
+
+		<!-- Molecule Creation Example -->
+		<script>
+			
+			var benzene = new MyJSLab.molecule();
+			benzene.listen(function(evt){
+				console.log('molecule updated',evt);
+			});
+			benzene.import('nativeJson',[
+				{
+					id: 1,
+					element: 'C',
+					bonds: [
+						{toId: 6, type: 'double'},
+						{toId: 2, type: 'single'}
+					]
+				},
+				{
+					id: 2,
+					element: 'C',
+					bonds: [
+						{toId: 1, type: 'single'},
+						{toId: 3, type: 'double'}
+					]
+				},
+				{
+					id: 3,
+					element: 'C',
+					bonds: [
+						{toId: 2, type: 'double'},
+						{toId: 4, type: 'single'}
+					]
+				},
+				{
+					id: 4,
+					element: 'C',
+					bonds: [
+						{toId: 3, type: 'single'},
+						{toId: 5, type: 'double'}
+					]
+				},
+				{
+					id: 5,
+					element: 'C',
+					bonds: [
+						{toId: 4, type: 'double'},
+						{toId: 6, type: 'single'}
+					]
+				},
+				{
+					id: 6,
+					element: 'C',
+					bonds: [
+						{toId: 5, type: 'single'},
+						{toId: 1, type: 'double'}
+					]
+				}
+			]);
+			console.log(benzene);
+			console.log('molecular weight - '+ benzene.calculateMolecularWeight());
+			
+		</script>
+
+	</body>
+
+</html>
